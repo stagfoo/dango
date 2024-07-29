@@ -8,8 +8,10 @@ copy the path and create sym or mv or delete
 
 - mkdir ~/.config/dango
 - touch ~/.config/dango/dango.toml
-- download release
-- alias dango="path/to/dango"
+- git cloen this repo
+- git mod tidy
+- go build ./main.go
+- add alias dango="path/to/dango/main" to your terminal rc
 
 
 ```
