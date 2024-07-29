@@ -3,8 +3,10 @@ package internal
 import (
 	"fmt"
 	"os"
+  "os/user"
 
 	"github.com/BurntSushi/toml"
+
 )
 
 type MyDB struct {
@@ -12,7 +14,8 @@ type MyDB struct {
 	Items   []string
 }
 
-const Path = "/Users/al/.config/bindle/bindle.toml"
+var usr, errorPath = user.Current()
+var Path = usr.HomeDir+ "/.config/dango/dango.toml"
 
 func ViewDB(path string) MyDB {
 	// view the database

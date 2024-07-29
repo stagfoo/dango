@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	internal "inventory/internal"
+	internal "dango/internal"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -21,7 +21,7 @@ var ViewName string
 var Message string
 
 func main() {
-	//TODO add current files in folder to inventory
+	//TODO add current files in folder to dango
 	files, getFilesErr := internal.ListFilesInFolder()
 	if getFilesErr != nil {
 		fmt.Println("Error getting files in folder:", getFilesErr)
@@ -33,15 +33,15 @@ func main() {
 		ViewName = "pickup"
 		MyProgram := tea.NewProgram(initialModel(files))
 		internal.Pickup(MyProgram)
-	case "bindle":
-		ViewName = "bindle"
+	case "list":
+		ViewName = "list"
 		db := internal.ViewDB(internal.Path)
 		MyProgram := tea.NewProgram(initialModel(db.Items))
 		internal.Putdown(MyProgram)
 	case "lootdrop":
 		lootdrop()
 	default:
-		fmt.Println("( -3- )")
+		fmt.Println("🍡")
 		return
 	}
 }
@@ -49,10 +49,10 @@ func main() {
 func lootdrop() {
 	err := os.Remove(internal.Path)
 	if err != nil && !os.IsNotExist(err) {
-		fmt.Println("Error clearing inventory file:", err)
+		fmt.Println("Error clearing dango file:", err)
 		return
 	}
-	fmt.Println("All files have been removed from the inventory.")
+	fmt.Println("All files have been removed from the dango.")
 }
 
 func initialModel(choices []string) model {
@@ -95,14 +95,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Cool, what was the actual key pressed?
 		switch msg.String() {
 
-		case "o":
-			_, ok := m.selected[m.cursor]
-			if ok {
-				internal.CopyToClipboard(m.choices[m.cursor])
-				internal.RemoveFromDB(m.choices[m.cursor])
-				delete(m.selected, m.cursor)
-			}
-			return m, tea.Quit
 		case "c":
 			_, ok := m.selected[m.cursor]
 			if ok {
@@ -151,7 +143,6 @@ func (m model) View() string {
 	// The header
 	s := "What file do you want to pickup?\n"
 	s += "Press space to add.\n"
-	s += "Press o to copy & remove.\n"
 	s += "Press c to copy.\n"
 	s += "Press q to close.\n\n"
 

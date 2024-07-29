@@ -1,4 +1,4 @@
-module inventory
+module dango
 
 go 1.22.3
 
