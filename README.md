@@ -30,6 +30,8 @@ Press q to close.
 
 ```
 
+space is add (🍡) and remove (✨)
+
 ## Supported Commands
 
 - list: lists the current paths and allows you to copy and remove
