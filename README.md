@@ -5,13 +5,12 @@ copy the path and create sym or mv or delete
 
 ## Install structions for now (might make an installer)
 
-```
-mkdir ~/.config/dango
-touch ~/.config/dango/dango.toml
-1. download release
-2. alias dango="path/to/dango"
 
-```
+- mkdir ~/.config/dango
+- touch ~/.config/dango/dango.toml
+- download release
+- alias dango="path/to/dango"
+
 
 ```
 $ dango pickup
