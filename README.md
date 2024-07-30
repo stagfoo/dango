@@ -1,4 +1,4 @@
-# Dango 🍡
+# Dango 🍡 (WIP)
 
 store file path to files in a shared text based clipboard
 copy the path and create sym or mv or delete
