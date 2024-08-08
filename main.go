@@ -1,36 +1,40 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"strings"
+	"path/filepath"
 
 	internal "dango/internal"
 
-	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/pelletier/go-toml"
 )
 
 type model struct {
-	choices  []string         // items on the to-do list
-	cursor   int              // which to-do list item our cursor is pointing at
-	selected map[int]struct{} // which to-do items are selected
+	choices  []string
+	cursor   int
+	selected map[int]struct{}
 }
 
 var ViewName string
 var Message string
 
 func main() {
-	//TODO add current files in folder to dango
-	files, getFilesErr := internal.ListFilesInFolder()
-	if getFilesErr != nil {
-		fmt.Println("Error getting files in folder:", getFilesErr)
+	ensureDBExists()
+
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: dango <command>")
 		return
 	}
 
-	switch os.Args[1] {
+	command := os.Args[1]
+
+	switch command {
 	case "pickup":
 		ViewName = "pickup"
+		files := readInput()
 		MyProgram := tea.NewProgram(initialModel(files))
 		internal.Pickup(MyProgram)
 	case "list":
@@ -40,38 +44,84 @@ func main() {
 		internal.Putdown(MyProgram)
 	case "lootdrop":
 		lootdrop()
+	case "output":
+		outputSelectedItems()
 	default:
 		fmt.Println("🍡")
-		return
+	}
+}
+
+func ensureDBExists() {
+	if _, err := os.Stat(internal.Path); os.IsNotExist(err) {
+		dir := filepath.Dir(internal.Path)
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			fmt.Fprintf(os.Stderr, "Error creating directory: %v\n", err)
+			os.Exit(1)
+		}
+
+		emptyDB := internal.MyDB{Items: []string{}}
+		data, err := toml.Marshal(emptyDB)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error marshaling empty DB: %v\n", err)
+			os.Exit(1)
+		}
+
+		if err := os.WriteFile(internal.Path, data, 0644); err != nil {
+			fmt.Fprintf(os.Stderr, "Error creating dango.toml: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("Created new dango.toml file.")
+	}
+}
+
+func readInput() []string {
+	var input []string
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		input = append(input, scanner.Text())
+	}
+	if len(input) == 0 {
+		// If no input from stdin, fallback to listing files in the folder
+		files, err := internal.ListFilesInFolder()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error getting files in folder: %v\n", err)
+			os.Exit(1)
+		}
+		return files
+	}
+	return input
+}
+
+func outputSelectedItems() {
+	db := internal.ViewDB(internal.Path)
+	for _, item := range db.Items {
+		fmt.Println(item)
 	}
 }
 
 func lootdrop() {
 	err := os.Remove(internal.Path)
 	if err != nil && !os.IsNotExist(err) {
-		fmt.Println("Error clearing dango file:", err)
+		fmt.Fprintf(os.Stderr, "Error clearing dango file: %v\n", err)
 		return
 	}
 	fmt.Println("All files have been removed from the dango.")
 }
 
 func initialModel(choices []string) model {
-	items := []list.Item{}
 	selected := make(map[int]struct{})
 	for cursor, choice := range choices {
 		if choice != "" {
 			if internal.FindInDB(choice) != "" {
 				selected[cursor] = struct{}{}
-				continue
 			}
-			_ = append(items, listItem(strings.TrimSpace(choice)))
 		}
 	}
-	m := model{
+	return model{
 		choices:  choices,
 		selected: selected,
 	}
-	return m
 }
 
 type listItem string

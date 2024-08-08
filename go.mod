@@ -5,7 +5,7 @@ go 1.22.3
 require (
 	github.com/charmbracelet/bubbles v0.18.0
 	github.com/charmbracelet/bubbletea v0.26.6
-	github.com/sblinch/kdl-go v0.0.0-20240410000746-21754ba9ac55
+	github.com/pelletier/go-toml v1.9.5
 )
 
 require (
