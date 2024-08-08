@@ -1,15 +1,21 @@
-# Dango 🍡
+# Dango 🍡 (WIP)
 
 store file path to files in a shared text based clipboard
 copy the path and create sym or mv or delete
+
+## Goal
+
+I wanted to make a little util that allowed me to get just pick the files I wanted from a folder in the terminal and pipe those paths into other clis like mv or copy or clipboard
 
 ## Install structions for now (might make an installer)
 
 
 - mkdir ~/.config/dango
 - touch ~/.config/dango/dango.toml
-- download release
-- alias dango="path/to/dango"
+- git cloen this repo
+- git mod tidy
+- go build ./main.go
+- add alias dango="path/to/dango/main" to your terminal rc
 
 
 ```
@@ -28,6 +34,8 @@ Press q to close.
 
 ```
 
+space is add (🍡) and remove (✨)
+
 ## Supported Commands
 
 - list: lists the current paths and allows you to copy and remove
@@ -35,4 +43,4 @@ Press q to close.
 
 
 ## Issues
-- currently uses pbclip instead of piping
+- currently uses `pbclip` instead of piping
