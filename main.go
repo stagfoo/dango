@@ -42,13 +42,35 @@ func main() {
 		db := internal.ViewDB(internal.Path)
 		MyProgram := tea.NewProgram(initialModel(db.Items))
 		internal.Putdown(MyProgram)
-	case "lootdrop":
+	case "drop":
 		lootdrop()
 	case "output":
 		outputSelectedItems()
+  case "show":
+    listDirectoriesAndFiles()
 	default:
 		fmt.Println("🍡")
 	}
+}
+
+func listDirectoriesAndFiles() error {
+	// Get the current working directory
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	// Use filepath.Glob to get all files and directories in the current directory
+	files, err := filepath.Glob(filepath.Join(currentDir, "*"))
+	if err != nil {
+		return err
+	}
+
+	// Print each file/directory path to stdout
+	for _, file := range files {
+		fmt.Println(file)
+	}
+	return nil
 }
 
 func ensureDBExists() {
