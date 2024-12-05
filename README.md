@@ -12,7 +12,7 @@ I wanted to make a little util that allowed me to get just pick the files I want
 
 - mkdir ~/.config/dango
 - touch ~/.config/dango/dango.toml
-- git cloen this repo
+- git clone this repo
 - git mod tidy
 - go build ./main.go
 - add alias dango="path/to/dango/main" to your terminal rc
