@@ -32,45 +32,23 @@ func main() {
 	command := os.Args[1]
 
 	switch command {
-	case "pickup":
+	case "stick":
 		ViewName = "pickup"
 		files := readInput()
 		MyProgram := tea.NewProgram(initialModel(files))
-		internal.Pickup(MyProgram)
-	case "list":
+		internal.ViewDBItems(MyProgram)
+	case "stuck":
 		ViewName = "list"
 		db := internal.ViewDB(internal.Path)
 		MyProgram := tea.NewProgram(initialModel(db.Items))
-		internal.Putdown(MyProgram)
+		internal.ViewDBItems(MyProgram)
 	case "drop":
-		lootdrop()
-	case "output":
-		outputSelectedItems()
-  case "show":
-    listDirectoriesAndFiles()
+		internal.RemoveAllItems()
+	case "serve":
+		internal.OutputSelectedItems()
 	default:
-		fmt.Println("🍡")
+		fmt.Println("🍡 No command provided <stick |stuck | serve | drop>")
 	}
-}
-
-func listDirectoriesAndFiles() error {
-	// Get the current working directory
-	currentDir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	// Use filepath.Glob to get all files and directories in the current directory
-	files, err := filepath.Glob(filepath.Join(currentDir, "*"))
-	if err != nil {
-		return err
-	}
-
-	// Print each file/directory path to stdout
-	for _, file := range files {
-		fmt.Println(file)
-	}
-	return nil
 }
 
 func ensureDBExists() {
@@ -99,36 +77,22 @@ func ensureDBExists() {
 
 func readInput() []string {
 	var input []string
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		input = append(input, scanner.Text())
-	}
-	if len(input) == 0 {
+	HasPipedInput := internal.HasInputFromPipe()
+	if !HasPipedInput {
 		// If no input from stdin, fallback to listing files in the folder
-		files, err := internal.ListFilesInFolder()
+		files, err := internal.ListDirectoryContents(false)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error getting files in folder: %v\n", err)
 			os.Exit(1)
 		}
-		return files
+		input = files
+	} else {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			input = append(input, scanner.Text())
+		}
 	}
 	return input
-}
-
-func outputSelectedItems() {
-	db := internal.ViewDB(internal.Path)
-	for _, item := range db.Items {
-		fmt.Println(item)
-	}
-}
-
-func lootdrop() {
-	err := os.Remove(internal.Path)
-	if err != nil && !os.IsNotExist(err) {
-		fmt.Fprintf(os.Stderr, "Error clearing dango file: %v\n", err)
-		return
-	}
-	fmt.Println("All files have been removed from the dango.")
 }
 
 func initialModel(choices []string) model {
@@ -146,15 +110,8 @@ func initialModel(choices []string) model {
 	}
 }
 
-type listItem string
-
-func (i listItem) FilterValue() string { return string(i) }
-
-func (i listItem) Title() string { return string(i) }
-
-func (i listItem) Description() string { return "" }
-
 func (m model) Init() tea.Cmd {
+	ViewName = "pickup"
 	return nil
 }
 
@@ -213,8 +170,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	// The header
-	s := "What file do you want to pickup?\n"
-	s += "Press space to add.\n"
+	s := "Press space to add/remove.\n"
 	s += "Press c to copy.\n"
 	s += "Press q to close.\n\n"
 
