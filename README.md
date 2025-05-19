@@ -6,6 +6,7 @@ copy the path and create sym or mv or delete
 ## Goal
 
 I wanted to make a little util that allowed me to get just pick the files I wanted from a folder in the terminal and pipe those paths into other clis like mv or copy or clipboard
+things like keys or templates or envs between miroservices
 
 ## Install structions for now (might make an installer)
 
