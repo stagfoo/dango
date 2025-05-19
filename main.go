@@ -127,8 +127,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "c":
 			_, ok := m.selected[m.cursor]
 			if ok {
-				internal.CopyToClipboard(m.choices[m.cursor])
-				Message = "Copied to clipboard."
+				tea.Println(m.choices[m.cursor])
+				// return m, tea.Quit
 			}
 
 		// These keys should exit the program.
@@ -170,9 +170,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	// The header
-	s := "Press space to add/remove.\n"
-	s += "Press c to copy.\n"
-	s += "Press q to close.\n\n"
+	s := "[space] to add/remove.\n"
+	s += "c to copy.\n"
+	s += "q to close.\n\n"
 
 	// Iterate over our choices
 	for i, choice := range m.choices {

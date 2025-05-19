@@ -54,11 +54,11 @@ space is add (🍡) and remove (✨)
 migrating a pull request template
 
 ```
-$ dango show | dango pickup
+$ dango serve | dango stick
 $ > [✨] /Users/al/0_projects/basal/project_a/.github/PULL_REQUEST_TEMPLATE.md
 $ cd new_project
 
-$ cp "$(dango output | grep 'PULL')" ./.github/PULL_REQUEST_TEMPLATE.md
+$ cp "$(dango serve | grep 'PULL')" ./.github/PULL_REQUEST_TEMPLATE.md
 ```
 I can copy the new template whenever its missing to the new repo
 
