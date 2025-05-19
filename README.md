@@ -19,7 +19,7 @@ I wanted to make a little util that allowed me to get just pick the files I want
 
 
 ```
-$ dango pickup
+$ dango stick
 
 What file do you want to pickup?
 Press space to add.
@@ -33,15 +33,16 @@ Press q to close.
   [✨] /Users/al/1_daily/notes.md
 
 ```
+stick also accepts piping
 
 space is add (🍡) and remove (✨)
 
 ## Supported Commands
 
-- list: lists the current paths saved in your config and allows you to copy and remove
-- pickup: accepts a list of the files from a pipe and lets you save the path to your config
-- show: lists of the files with the full path in the current dir which can be piped to pickup
-- output: echos current list (good for greping)
+- stuck: lists the current paths saved in your config and allows you to copy and remove
+- stick: accepts a list of the files from a pipe and lets you save the path to your config
+- drop: lists of the files with the full path in the current dir which can be piped to pickup
+- serve: echos current list (good for greping)
 
 
 ## Issues
@@ -62,9 +63,9 @@ $ cp "$(dango output | grep 'PULL')" ./.github/PULL_REQUEST_TEMPLATE.md
 I can copy the new template whenever its missing to the new repo
 
 ```
-$ dango show | dango pickup
+$ dango serve | dango stick
 $ > [✨] /Users/al/0_projects/basal/project_a/alias.sh
-$ dango list
+$ dango stuck
 $ > [✨] /Users/al/0_projects/basal/project_a/alias.sh
 $ path copied
 $ nvim /Users/al/0_projects/basal/.dotfiles/alias.sh
