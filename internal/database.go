@@ -3,19 +3,19 @@ package internal
 import (
 	"fmt"
 	"os"
-  "os/user"
+	"os/user"
 
 	"github.com/BurntSushi/toml"
-
 )
 
 type MyDB struct {
-	Version int
-	Items   []string
+	Version   int
+	Items     []string
+	Clipboard string
 }
 
 var usr, errorPath = user.Current()
-var Path = usr.HomeDir+ "/.config/dango/dango.toml"
+var Path = usr.HomeDir + "/.config/dango/dango.toml"
 
 func ViewDB(path string) MyDB {
 	// view the database
@@ -33,6 +33,13 @@ func ViewDB(path string) MyDB {
 
 func SaveDb(db MyDB) bool {
 	// save the database
+	fmt.Print(db.Clipboard)
+	if db.Clipboard == "" {
+		db.Clipboard = "pbcopy"
+	}
+	if db.Version == 0 {
+		db.Version = 1
+	}
 	b, err := toml.Marshal(db)
 	if err != nil {
 		panic(err)

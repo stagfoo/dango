@@ -103,7 +103,12 @@ func RemoveAllItems() {
 }
 
 func CopyToClipboard(text string) error {
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("echo %s | pbcopy", text))
+	db := ViewDB(Path)
+	if db.Clipboard == "" {
+		db.Clipboard = "pbcopy"
+		SaveDb(db)
+	}
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("echo %s | %s", text, db.Clipboard))
 	return cmd.Run()
 }
 

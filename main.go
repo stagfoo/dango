@@ -16,10 +16,12 @@ type model struct {
 	choices  []string
 	cursor   int
 	selected map[int]struct{}
+	quitting string
 }
 
 var ViewName string
 var Message string
+var PreviousSelection string = ""
 
 func main() {
 	ensureDBExists()
@@ -117,20 +119,16 @@ func (m model) Init() tea.Cmd {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-
 	// Is it a key press?
 	case tea.KeyMsg:
-
-		// Cool, what was the actual key pressed?
 		switch msg.String() {
-
 		case "c":
 			_, ok := m.selected[m.cursor]
 			if ok {
-				tea.Println(m.choices[m.cursor])
-				// return m, tea.Quit
+				tea.Println(m.selected[m.cursor])
+				internal.CopyToClipboard(m.choices[m.cursor])
+				return m, tea.Quit
 			}
-
 		// These keys should exit the program.
 		case "q":
 			return m, tea.Quit
