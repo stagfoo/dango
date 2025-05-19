@@ -54,7 +54,7 @@ space is add (🍡) and remove (✨)
 migrating a pull request template
 
 ```
-$ dango serve | dango stick
+$ dango stick
 $ > [✨] /Users/al/0_projects/basal/project_a/.github/PULL_REQUEST_TEMPLATE.md
 $ cd new_project
 
@@ -63,7 +63,7 @@ $ cp "$(dango serve | grep 'PULL')" ./.github/PULL_REQUEST_TEMPLATE.md
 I can copy the new template whenever its missing to the new repo
 
 ```
-$ dango serve | dango stick
+$ dango stick
 $ > [✨] /Users/al/0_projects/basal/project_a/alias.sh
 $ dango stuck
 $ > [✨] /Users/al/0_projects/basal/project_a/alias.sh
