@@ -48,7 +48,13 @@ func main() {
 		internal.RemoveAllItems()
 	case "serve":
 		internal.OutputSelectedItems()
+	case "box":
+		// prompt user to create new toml
+		// list dangos to edit
+		//
 	default:
+		//TODO add option for multiple dangos and make this i select of dangos
+		// alt command will be box
 		fmt.Println("🍡 No command provided <stick |stuck | serve | drop>")
 	}
 }
@@ -119,7 +125,7 @@ func (m model) Init() tea.Cmd {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	// Is it a key press?
+	// This is keypress message there are other message types in bubbletea
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "c":

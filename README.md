@@ -8,11 +8,8 @@ copy the path and create sym or mv or delete
 I wanted to make a little util that allowed me to get just pick the files I wanted from a folder in the terminal and pipe those paths into other clis like mv or copy or clipboard
 things like keys or templates or envs between miroservices
 
-## Install structions for now (might make an installer)
+## Install instructions for now (might make an installer)
 
-
-- mkdir ~/.config/dango
-- touch ~/.config/dango/dango.toml
 - git clone this repo
 - git mod tidy
 - go build ./main.go
@@ -48,7 +45,7 @@ space is add (🍡) and remove (✨)
 
 ## Issues
 - currently uses `pbclip` instead of piping
-
+- No tests
 
 ## Example usage
 
